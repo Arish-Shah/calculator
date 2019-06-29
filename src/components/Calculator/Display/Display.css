@@ -1,0 +1,21 @@
+.Display{
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  background: black;
+  color: white;
+  display: flex;
+  flex-direction: row-reverse;
+  font-size: 5rem;
+  align-items: flex-end;
+  overflow-x: scroll;
+}
+
+span{
+  position: absolute;
+  font-size: 2rem;
+  color: #aaa;
+  top: 10px;
+  left: 10px;
+  font-weight: normal;
+}

@@ -1,0 +1,59 @@
+.Panel {
+  flex: 3.5;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.ButtonRow {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+.Button {
+  border: 1px solid #000;
+  border-left: 0;
+  border-bottom: 0;
+  flex: 1;
+  font-size: 2.75rem;
+  font-weight: 100;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.big-white {
+  flex: 2;
+}
+
+.orange {
+  color: white;
+  background-color: #F48B0D;
+}
+
+.orange:active {
+  background-color: #d67b0d;
+}
+
+.white, .big-white {
+  color: black;
+  background-color: #D4D5D7;
+}
+
+
+.white:active, .big-white:active {
+  background-color: #C3C4C6;
+  transition: all .5s ease-out;
+}
+
+.gray {
+  color: black;
+  background-color: #C3C4C6;
+}
+
+.gray:active {
+  background-color: #b9b9b9;
+}
