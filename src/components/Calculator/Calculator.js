@@ -10,8 +10,8 @@ class Calculator extends Component {
     secondNumber: 0,
     operator: null,
     operatorSet: false,
-    displayNumber: "0",
-    temporaryNumber: null
+    displayNumber: '0',
+    temporaryNumber: '0'
   }
 
   clickedHandler = (text, type) => {
@@ -26,14 +26,10 @@ class Calculator extends Component {
         break;
       case 'operator': this.operatorHandler(text);
         break;
-      case 'equals': this.calculate();
+      case 'equals': this.calculate('equals');
         break;
       default: console.log('unknown button pressed');
     }
-    if (this.state.operatorSet) {
-      this.setState({ temporaryNumber: null });
-    }
-    //console.log(this.state);
   }
 
   clear = () => {
@@ -42,7 +38,8 @@ class Calculator extends Component {
       secondNumber: 0,
       operator: null,
       operatorSet: false,
-      displayNumber: "0"
+      displayNumber: '0',
+      temporaryNumber: '0'
     });
   }
 
@@ -62,19 +59,19 @@ class Calculator extends Component {
   }
 
   plusMinusHandler = () => {
-    let displayNumber = this.state.displayNumber;
+    let tempNumber = this.state.displayNumber === '0' ? this.state.temporaryNumber : this.state.displayNumber;
 
     //Checking if the number is already negative or not
-    if (displayNumber.substr(0, 1) === '-') {
-      displayNumber = displayNumber.substr(1);
+    if (tempNumber.substr(0, 1) === '-') {
+      tempNumber = tempNumber.substr(1);
     } else {
-      displayNumber = '-' + displayNumber;
+      tempNumber = '-' + tempNumber;
     }
-    let number = parseFloat(displayNumber);
+    let number = parseFloat(tempNumber);
 
     //Setting states
     this.state.operatorSet ? this.setState({ secondNumber: number }) : this.setState({ firstNumber: number });
-    this.setState({ displayNumber: displayNumber });
+    this.state.displayNumber === '0' ? this.setState({ temporaryNumber: tempNumber }) : this.setState({ displayNumber: tempNumber });
   }
 
   decimalHandler = () => {
@@ -88,26 +85,46 @@ class Calculator extends Component {
     this.setState({ displayNumber: displayNumber });
   }
 
-  operatorHandler = (text) => {
-    if (this.state.operatorSet) {
-      this.calculate();
-      this.setState({
-        displayNumber: this.state.firstNumber
-      });
+  operatorHandler = (passedOperator) => {
+    if (passedOperator === '%') {
+      this.percentageHandler();
+    } else if (this.state.operatorSet) {
+      if (this.state.secondNumber === 0) {
+        this.setState({
+          operator: passedOperator
+        });
+      } else {
+        this.calculate('n0s');
+        this.setState({ operator: passedOperator });
+      }
     } else {
       this.setState({
+        operator: passedOperator,
+        operatorSet: true,
+        displayNumber: '0',
         temporaryNumber: this.state.firstNumber
       });
     }
-
-    this.setState({
-      operatorSet: true,
-      operator: text,
-      displayNumber: "0",
-    });
   }
 
-  calculate = () => {
+  percentageHandler = () => {
+    let number = (this.state.operatorSet ? this.state.secondNumber : this.state.firstNumber) / 100;
+
+    this.state.operatorSet ?
+      this.setState({
+        secondNumber: number,
+        displayNumber: "" + number
+      }) :
+      this.setState({
+        firstNumber: number,
+        secondNumber: 0,
+        operator: null,
+        operatorSet: false,
+        displayNumber: "" + number
+      });
+  }
+
+  calculate = (calculateType) => {
     let result = 0;
 
     switch (this.state.operator) {
@@ -119,26 +136,33 @@ class Calculator extends Component {
         break;
       case '÷': result = this.state.firstNumber / this.state.secondNumber;
         break;
-      default: console.log('Unknown Operator');
+      default: result = this.state.firstNumber;
     }
-    //Fix .3337 to 2 decimal places if it exists
-    if (result % 1 !== 0) {
-      result = result.toFixed(2);
+    this.setResult(calculateType, result);
+  }
+
+  setResult = (calculateType, result) => {
+    if (calculateType === 'equals') {
+      this.setState({
+        firstNumber: result,
+        secondNumber: 0,
+        operator: null,
+        operatorSet: false,
+        displayNumber: '0',
+        temporaryNumber: '' + result
+      });
+    } else if (calculateType === 'n0s') {
+      this.setState({
+        firstNumber: result,
+        secondNumber: 0,
+        displayNumber: '0',
+        temporaryNumber: '' + result
+      });
     }
-
-    let displayNumber = "" + result;
-
-    this.setState({
-      firstNumber: result,
-      secondNumber: 0,
-      operator: null,
-      operatorSet: false,
-      displayNumber: displayNumber
-    });
   }
 
   render() {
-    let number = this.state.temporaryNumber || this.state.displayNumber;
+    let number = this.state.displayNumber === '0' ? this.state.temporaryNumber : this.state.displayNumber;
 
     return (
       <div className="Calculator">
