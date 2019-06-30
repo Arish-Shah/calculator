@@ -61,17 +61,19 @@ class Calculator extends Component {
   plusMinusHandler = () => {
     let tempNumber = this.state.displayNumber === '0' ? this.state.temporaryNumber : this.state.displayNumber;
 
-    //Checking if the number is already negative or not
-    if (tempNumber.substr(0, 1) === '-') {
-      tempNumber = tempNumber.substr(1);
-    } else {
-      tempNumber = '-' + tempNumber;
-    }
-    let number = parseFloat(tempNumber);
+    if (tempNumber !== '0') {
+      //Checking if the number is already negative or not
+      if (tempNumber.substr(0, 1) === '-') {
+        tempNumber = tempNumber.substr(1);
+      } else {
+        tempNumber = '-' + tempNumber;
+      }
+      let number = parseFloat(tempNumber);
 
-    //Setting states
-    this.state.operatorSet ? this.setState({ secondNumber: number }) : this.setState({ firstNumber: number });
-    this.state.displayNumber === '0' ? this.setState({ temporaryNumber: tempNumber }) : this.setState({ displayNumber: tempNumber });
+      //Setting states
+      this.state.operatorSet ? this.setState({ secondNumber: number }) : this.setState({ firstNumber: number });
+      this.state.displayNumber === '0' ? this.setState({ temporaryNumber: tempNumber }) : this.setState({ displayNumber: tempNumber });
+    }
   }
 
   decimalHandler = () => {
